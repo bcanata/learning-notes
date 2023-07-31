@@ -1,0 +1,249 @@
+---
+sidebar_label: Cache
+description: Notes about HTTP caches and the associated header fields that control cache behavior or indicate cacheable response messages.
+toc_max_heading_level: 4
+---
+
+# HTTP Cache
+
+Fetching resources over the network is both slow and expensive:
+
+- If a person is accessing your site with a limited mobile data plan, every unnecessary network request is a waste of their money.
+- Large responses (_image/audio_) require many roundtrip between the browser and the server.
+
+How can we avoid unnecessary network requests? The HTTP cache can be helpful.
+
+The HTTP cache stores a response associated with a request and reuses the stored response for subsequent requests.
+
+## Cache Key
+
+A cache key is composed from, at a minimum:
+
+- request method
+- target URI
+
+:::info
+
+Many HTTP caches only cache `GET` responses and therefore only use the URI as the cache key.
+
+Most commonly, caches stores the successful result of a retrieval request: i.e., a 200 (OK) response to a `GET` request, which contains a representation of the target resource.
+
+However, it is also possible to store redirects, negative results (e.g., **404 (Not Found)**), incomplete results (e.g., **206(Partial Content)**), and responses to other methods other than `GET`.
+
+:::
+
+### Vary
+
+`Vary` expands the [cache key](#cache-key) required to match a new request to the stored cache entry.
+
+A cache might store multiple responses for a request target that is subject to _content negotiation_. Caches differentiate these responses by incorporating some of the original request's header fields into the **cache key**, using information in the `Vary` response header field.
+
+<figure style={{ textAlign: "center" }}>
+  <img
+    alt="cache key with Accept-Language"
+    src="https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching/keyed-with-url-and-language.png"
+  ></img>
+  <figcaption>Cache keys incorporating Accept-Language.</figcaption>
+</figure>
+
+```http
+Vary: accept-encoding, accept-language
+```
+
+:::note
+
+A stored response with a `Vary` header field value containing a member "\*" always fails to match.
+
+:::
+
+## Freshness
+
+Stored HTTP responses have two states: **fresh** or **stale**.
+
+A _fresh_ response is one whose **age** has not yet exceeded its [freshness lifetime](#freshness-lifetime). While a _stale_ response is one that has already expired.
+
+### Age
+
+The `Age` field value is the cache's estimate of the number of seconds since the origin server generated or validated the response.
+
+> `Age` is the time elapsed since the response was generated.
+
+### Freshness Lifetime
+
+A cache can calculate the **freshness lifetime** of a response by evaluating the following rules and using the first match:
+
+1. If the cache is **shared** and the `s-maxage` response directive is present, use its value.
+2. If the `max-age` response directive is present, use its value.
+3. If the `Expires` response header field is present, use its value minus the value of the `Date` response header field.
+4. If no explicit expiration time is present in the response. A heuristic freshness lifetime might be applicable.
+
+## Validation
+
+Stale responses are not immediately discarded. The conditional request mechanism can transform a stale response into a fresh one by asking the origin server, or to replace the stored response(s) with a new response. This process is known as _validating_ or _revalidating_ the stored response.
+
+### Sending a Validation Request
+
+When generating a conditional request for validation, a cache synthesizes a request using a stored response by copying the method, target URI, and request header fields specified by the [Vary](#vary) header field.
+
+The cache then updates the request with one or more **precondition header fields** which contain validators sourced from a stored response(s).
+
+When generating a conditional request for validated, a cache:
+
+- _MUST_ send the relevant entity tags (using `If-None-Match`, `If-Match`) if the entity tags (ETag) were provided in the stored response(s) being validated.
+- _SHOULD_ send the `Last-Modified` value (using `If-Modified-Since`) if the request is not for a subrange, and that response contains a `Last-Modified` value.
+
+The precondition header fields are compared by recipients (servers) to determine whether the stored response is equivalent to the current representation of the resource.
+
+:::info
+
+Resource metadata is referred to as a _validator_ if it can be used within a precondition to make a conditional request.
+
+There are two forms of metadata:
+
+- modification dates
+- opaque entity tags (clearly superior)
+
+:::
+
+The precondition header fields can contain two different types of **validators**.
+
+#### Timestamp
+
+One validator is the timestamp given in a `Last-Modified` header field, which can be used in an `If-Modified-Since` header field for response validation.
+
+:::info
+
+The `Last-Modified` header field in a response provides a timestamp indicating the date and time at which the origin server believes the selected representation was last modified.
+
+```
+Last-Modified: Tue, 15 Nov 1994 12:45:26 GMT
+```
+
+:::
+
+#### Entity Tag (ETag) {#etag}
+
+Another validator is the entity tag given in an `ETag` field. One or more entity tags, indicating one or more stored responses, can be used in an `If-None-Match` header field for response validation.
+
+##### Example
+
+A response, an HTML file, has a `ETag` value of `33a64df5`.
+
+```bash title="response of /index.html"
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1024
+Date: Tue, 22 Feb 2022 22:22:22 GMT
+ETag: "33a64df5"
+Cache-Control: max-age=3600
+```
+
+If that response is stale, the client takes the value of the `ETag` from the response header of the cached response, and puts it into the `If-None-Match` request header of the validation request, to ask the server if the resource has been modified.
+
+```bash title="A conditional request for validation"
+GET /index.html HTTP/1.1
+Host: example.com
+Accept: text/html
+If-None-Match: "33a64df5"
+```
+
+see below for how to handle the validation response.
+
+### Handling a Validation Response
+
+A cache handles a response to a conditional request by considering its status code:
+
+- A **304 (Not Modified)** response status code indicates that the stored response can be updated and reused.
+- A full response (i.e., one containing content) indicates that none of the stored responses nominated in the conditional request are suitable. Therefore, the cache _MUST_ use the full response to satisfy the request. The cache _MAY_ store the full response.
+
+## Field Definitions
+
+This section discusses the HTTP fields related to caching.
+
+### Age
+
+The `Age` response header filed is the time elapsed since the response was generated or successfully validated at the origin server.
+
+### Cache-Control
+
+The `Cache-Control` header field is used to list directives for caches. Cache directives are **unidirectional**👽️, the presence of a directive in a **request** does not imply that the same directive is present or copied in the **response**.
+
+:::caution
+
+The [request directives](https://httpwg.org/specs/rfc9111.html#cache-request-directive) are advisory, caches _MAY_ implement them, but are not required to. So our primary focus is on **response directives**, a cache _MUST_ obey the `Cache-Control` directives in response.
+
+:::
+
+#### `max-age`
+
+The `max-age` response directive indicates that the response is to be considered stale after its [age](#age) is greater than the specified number of seconds.
+
+#### `must-revalidate`
+
+The `must-revalidate` response directive indicates that once the response has become stale, a cache _MUST NOT_ reuse that response to satisfy another request until it has been successfully validated by the origin.
+
+If a cache is disconnected, a cache _MUST_ generate an error response rather than reuse the stale response. The generated status code _SHOULD_ be **504 (Gateway Timeout)** unless another error status code is more applicable.
+
+#### `no-cache`
+
+The `no-cache` response directive indicates that the response _MUST NOT_ be used to satisfy any other request without forwarding it for validation and receiving a successful response.
+
+This allows an origin server to prevent a cache from using response to satisfy a request without contacting it.
+
+#### `no-store` ⛔️ {#no-store}
+
+The `no-store` response directive indicates that a cache _MUST NOT_ store any part of either the intermediate request or the response and _MUST NOT_ use the response to satisfy any other request.
+
+#### `private`
+
+The `private` response directive indicates that a shared cache _MUST NOT_ store the response since the response is intended for a single user. It also indicates that a private cache _MAY_ store the response.
+
+#### `public`
+
+It permits a shared cache to reuse a response to a request containing an `Authorization` header field.
+
+:::note
+
+It is unnecessary to add the `public` directive to a response that is already cacheable.
+
+:::
+
+### Expires
+
+The `Expires` response header field gives the date/time after which the response is considered stale.
+
+```
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+```
+
+:::note
+
+If a response includes a [Cache-Control](#cache-control) header field with the [max-age](#max-age), a recipient _MUST_ ignore the `Expires` header field. Because the value in `Expires` is only intended for recipients that have not yet implemented the [Cache-Control](#cache-control) header field.
+
+:::
+
+## Heuristic Caching
+
+Since origin servers do not always provide explicit expiration times, a cache _MAY_ assign a heuristic expiration time when an explicit time is not specified, employing algorithms that use other field values (such as the [Last-Modified](#last-modified) time) to estimate a plausible expiration time.
+
+If the response has a [Last-Modified](#last-modified) header field, caches are encouraged to use a heuristic expiration value that is no more than some fraction of the interval since that time. A typical setting of this fraction might be 10%;
+
+### Example
+
+If a response has a [Last-Modified](#last-modified) header field set to 1 year ago.
+
+```bash
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1024
+Date: Tue, 22 Feb 2022 22:22:22 GMT
+Last-Modified: Tue, 22 Feb 2021 22:22:22 GMT
+```
+
+The response will be stored in a cache and it is considered as fresh for 0.1 year.
+
+## References
+
+- [Prevent unnecessary network requests with the HTTP Cache](https://web.dev/http-cache/)
+- [HTTP caching | MDN Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)
+- [RFC 9111: Hypertext Transfer Protocol (HTTP/1.1): Caching](https://httpwg.org/specs/rfc9111.html)

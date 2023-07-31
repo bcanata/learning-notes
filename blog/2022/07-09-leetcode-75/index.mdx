@@ -1,0 +1,669 @@
+---
+title: LeetCode 75 Study Plan
+authors: xiaohai
+tags: [study, algorithm]
+description: "Follow LeetCode 75 Study Plan."
+---
+
+import JSEditor from "@src/components/js-live-code-editor";
+import YouTubeVideo from "@src/components/youtube-video";
+import solution1 from "!!raw-loader!./_day-01/1480-running-sum-of-1d-array.js";
+import solution2 from "!!raw-loader!./_day-01/724-find-pivot-index.js";
+import solution3 from "!!raw-loader!./_day-02/205-isomorphic-strings.js";
+import solution4 from "!!raw-loader!./_day-02/392-is-subsequence.js";
+import solution5 from "!!raw-loader!./_day-03/21-merge-two-sorted-lists.js";
+import solution6 from "!!raw-loader!./_day-03/206-reverse-linked-list.js";
+import solution7 from "!!raw-loader!./_day-04/876-middle-of-the-linked-list.js";
+import solution8 from "!!raw-loader!./_day-04/142-linked-list-cycle-ii.js";
+import solution9 from "!!raw-loader!./_day-05/121-best-time-to-buy-and-sell-stock.js";
+import solution10 from "!!raw-loader!./_day-05/409-longest-palindrome.js";
+import solution11 from "!!raw-loader!./_day-06/589-n-ary-tree-preorder-traversal.js";
+import solution12 from "!!raw-loader!./_day-06/102-binary-tree-level-order-traversal.js";
+import solution13 from "!!raw-loader!./_day-07/704-binary-search.js";
+import solution14 from "!!raw-loader!./_day-07/278-first-bad-version.js";
+import solution15 from "!!raw-loader!./_day-08/98-validate-binary-search-tree.js";
+import solution16 from "!!raw-loader!./_day-08/235-lowest-common-ancestor-of-a-binary-search-tree.js";
+import solution17 from "!!raw-loader!./_day-09/733-flood-fill.js";
+import solution18 from "!!raw-loader!./_day-09/200-number-of-islands.js";
+import solution19 from "!!raw-loader!./_day-10/509-fibonacci-number.js";
+import solution20 from "!!raw-loader!./_day-10/70-climbing-stairs.js";
+import solution21 from "!!raw-loader!./_day-11/746-min-cost-climbing-stairs.js";
+import solution22 from "!!raw-loader!./_day-11/62-unique-paths.js";
+import solution23 from "!!raw-loader!./_day-12/438-find-all-anagrams-in-a-string";
+import solution24 from "!!raw-loader!./_day-12/424-longest-repeating-character-replacement.js";
+import solution25 from "!!raw-loader!./_day-13/438-find-all-anagrams-in-a-string.js";
+import solution26 from "!!raw-loader!./_day-14/394-decode-string.js";
+import solution28 from "!!raw-loader!./_day-15/1046-last-stone-weight.js";
+import solution29 from "!!raw-loader!./_day-15/692-top-k-frequent-words.js";
+
+> This study plan is for those who want to prepare for technical interviews but are uncertain which problems they should focus on. The problems have been carefully curated so that levels 1 and 2 will guide beginner and intermediate users through problems that cover the data structures and algorithms necessary to succeed in interviews with most mid-tier companies. While level 3 provides material to help users whose targets are top-tier companies.
+> -- <cite><a href="https://leetcode.com/study-plan/leetcode-75" target="_blank">LeetCode</a></cite>
+
+<!-- truncate -->
+
+## Day 1 Prefix Sum
+
+### 1480. Running Sum of 1d Array
+
+src: [https://leetcode.com/problems/running-sum-of-1d-array](https://leetcode.com/problems/running-sum-of-1d-array/)
+
+<JSEditor run={false}>{solution1}</JSEditor>
+
+### 724. Find Pivot Index
+
+src: [https://leetcode.com/problems/find-pivot-index](https://leetcode.com/problems/find-pivot-index/)
+
+:::note
+
+At a given index `i`, how do I get the value of `leftSum` and `rightSum`?
+
+Ans:
+
+- `leftSum` of **i**-th element can be computed by **summing** up all the values on the left of the **i**-th element.
+- `rightSum` of **i**-th element is equal to the sum of the array **minus** the value of the current element **and** `leftSum`.
+
+:::
+
+<JSEditor run={false}>{solution2}</JSEditor>
+
+## Day 2 String
+
+### 205. Isomorphic Strings
+
+src: [https://leetcode.com/problems/isomorphic-strings](https://leetcode.com/problems/isomorphic-strings/)
+
+:::note
+
+Given two strings s and t, determine if they are isomorphic.
+
+Two strings s and t are isomorphic if the characters in s can be replaced to get t.
+
+All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character, but a character may map to itself.
+
+:::
+
+Should pay more attention on the last paragraph of the requirement. A character can only be mapped to one character. Therefore, create a set to store the `values`. i.e. **one-to-one** relationship.
+
+|    input     | map                                                                   | result  |
+| :----------: | --------------------------------------------------------------------- | ------- |
+|  egg -> add  | `{e : a, g : d}`                                                      | `true`  |
+| badc -> baba | <ol><li>b -> b</li><li>a -> a</li><li>d -> b</li><li>c -> a</li></ol> | `false` |
+
+For "badc -> baba", it has two characters that map to b (**b** and **d**) so it is not isomorphic.
+
+<JSEditor run={false}>{solution3}</JSEditor>
+
+### 392. Is Subsequence
+
+src: [https://leetcode.com/problems/is-subsequence](https://leetcode.com/problems/is-subsequence/)
+
+:::note
+
+Given two strings s and t, return true if s is a subsequence of t, or false otherwise.
+
+A subsequence of a string is a new string that is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (i.e., "ace" is a subsequence of "abcde" while "aec" is not).
+
+:::
+
+A simple example `isSubsequence("bc", "abagdc")`
+
+First, check if `b` in the string if it does exist then check the **remaining characters** to see if `c` exist.
+
+<JSEditor run={false}>{solution4}</JSEditor>
+
+## Day 3 Linked List
+
+### 21. Merge Two Sorted Lists
+
+src: [https://leetcode.com/problems/merge-two-sorted-lists](https://leetcode.com/problems/merge-two-sorted-lists/)
+
+<JSEditor run={false}>{solution5}</JSEditor>
+
+### 206. Reverse Linked List
+
+src: [https://leetcode.com/problems/reverse-linked-list](https://leetcode.com/problems/reverse-linked-list/)
+
+![reverse linked list](https://assets.leetcode.com/uploads/2021/02/19/rev1ex1.jpg)
+
+:::tip
+
+Change each node's **next** pointer to its left node.
+
+`null <- 1 <- 2 <- 3`
+
+:::
+
+<JSEditor run={false}>{solution6}</JSEditor>
+
+## Day 4 Linked List
+
+### 876. Middle of the Linked List
+
+src: [https://leetcode.com/problems/middle-of-the-linked-list](https://leetcode.com/problems/middle-of-the-linked-list/)
+
+:::note
+
+Given the head of a singly linked list, return the middle node of the linked list.
+
+If there are two middle nodes, return the second middle node.
+
+**Example 1**
+
+![example 1](https://assets.leetcode.com/uploads/2021/07/23/lc-midlist1.jpg)
+
+```
+Input: head = [1,2,3,4,5]
+Output: [3,4,5]
+Explanation: The middle node of the list is node 3.
+```
+
+**Example 2**
+
+![example 2](https://assets.leetcode.com/uploads/2021/07/23/lc-midlist2.jpg)
+
+```
+Input: head = [1,2,3,4,5,6]
+Output: [4,5,6]
+Explanation: Since the list has two middle nodes with values 3 and 4, we return the second one.
+```
+
+:::
+
+:::tip
+
+**Fast and Slow Pointer**
+
+When traversing the list with a pointer slow, make another pointer fast that traverses **twice as fast**.
+
+- `slow = slow.next`
+- `fast = fast.next.next`
+
+When fast reaches the end of the list, slow must be in the middle.
+
+:::
+
+<JSEditor run={false}>{solution7}</JSEditor>
+
+### 142. Linked List Cycle II
+
+src: [https://leetcode.com/problems/linked-list-cycle-ii](https://leetcode.com/problems/linked-list-cycle-ii/)
+
+:::note
+
+Given the head of a linked list, return the node where the cycle begins. If there is no cycle, return `null`.
+
+:::
+
+<JSEditor run={false}>{solution8}</JSEditor>
+
+## Day 5 Greedy
+
+### 121. Best Time to Buy and Sell Stock
+
+src: [https://leetcode.com/problems/best-time-to-buy-and-sell-stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)
+
+Two import information to keep track of:
+
+- min price
+- max profit
+
+<JSEditor run={false}>{solution9}</JSEditor>
+
+### 409. Longest Palindrome
+
+src: [https://leetcode.com/problems/longest-palindrome](https://leetcode.com/problems/longest-palindrome/)
+
+:::note
+
+Given a string s which consists of lowercase or uppercase letters,
+return the length of the **longest palindrome** that **can be built** with those letters.
+
+:::
+
+Imagine we build a palindrome string, it will have as many as _partnered letters_ as possible,
+plus possibly a unique **center** character.
+
+- If the number of occurrences of a letter is **even**, add the count to the total length of the palindrome.
+- If the number of occurrences of a letter is **odd**, subtract the count by 1 and add it to the total length of the palindrome.
+- If the palindrome haven't added a unique character to the center, add 1 to the length of the palindrome if a character with the number of occurrences equals 1 is found.
+  - e.g. `{b : 2, f : 1, c : 1}`, `f` can be added to the center of the palindrome and it is the only character that is unique.
+
+:::caution
+
+- We can only insert 1 unique character and it has to be at the center.
+- `aa`, `abba` are palindrome strings. The center of the palindrome can have 2 characters.
+
+:::
+
+<JSEditor run={false}>{solution10}</JSEditor>
+
+## Day 6 Tree
+
+### 589. N-ary Tree Preorder Traversal
+
+src: [https://leetcode.com/problems/n-ary-tree-preorder-traversal](https://leetcode.com/problems/n-ary-tree-preorder-traversal/)
+
+:::note
+
+![example 1](https://assets.leetcode.com/uploads/2018/10/12/narytreeexample.png)
+
+- Input: root = `[1,null,3,2,4,null,5,6]`
+- Output: `[1,3,5,6,2,4]`
+
+:::
+
+Pre-order traversal is `root -> left -> right`.
+
+<JSEditor run={false}>{solution11}</JSEditor>
+
+### 102. Binary Tree Level Order Traversal
+
+src: [https://leetcode.com/problems/binary-tree-level-order-traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/)
+
+:::note
+
+![level order traversal example](https://assets.leetcode.com/uploads/2021/02/19/tree1.jpg)
+
+- Input: root = `[3,9,20,null,null,15,7]`
+- Output: `[[3],[9,20],[15,7]]`
+
+:::
+
+- Enqueue all nodes of a level.
+- Process the tree level-by-level.
+  - Enqueue all children of each node in the current level.
+  - How to process level-by-level? This is achieved by checking the number of nodes in a level before processing a level.
+
+<JSEditor run={false}>{solution12}</JSEditor>
+
+## Day 7 Binary Search
+
+### 704. Binary Search
+
+src: [https://leetcode.com/problems/binary-search](https://leetcode.com/problems/binary-search/)
+
+:::note
+
+Given an array of integers `nums` which is sorted in **ascending order**, and an integer `target`,
+write a function to search `target` in `nums`.
+If `target` exists, then return its index. Otherwise, return `-1`.
+
+```
+Input: nums = [-1,0,3,5,9,12], target = 9
+Output: 4
+Explanation: 9 exists in nums and its index is 4
+```
+
+```
+Input: nums = [-1,0,3,5,9,12], target = 2
+Output: -1
+Explanation: 2 does not exist in nums so return -1
+```
+
+:::
+
+<JSEditor run={false}>{solution13}</JSEditor>
+
+### 278. First Bad Version
+
+src: [https://leetcode.com/problems/first-bad-version](https://leetcode.com/problems/first-bad-version/)
+
+<JSEditor run={false}>{solution14}</JSEditor>
+
+## Day 8 Binary Search Tree
+
+### 98. Validate Binary Search Tree
+
+src: [https://leetcode.com/problems/validate-binary-search-tree](https://leetcode.com/problems/validate-binary-search-tree/)
+
+:::note
+
+Given the `root` of a binary tree, determine if it is a valid _binary search tree (BST)_.
+
+A valid **BST** is defined as follows:
+
+- The left subtree of a node contains only nodes with keys **less than** the node's key.
+- The right subtree of a node contains only nodes with keys **greater than** the node's key.
+- Both the left and right subtrees must also be binary search trees.
+
+**Example 1**
+
+![example 1](https://assets.leetcode.com/uploads/2020/12/01/tree1.jpg)
+
+```
+Input: root = [2,1,3]
+Output: true
+```
+
+![example 2](https://assets.leetcode.com/uploads/2020/12/01/tree2.jpg)
+
+```
+Input: root = [5,1,4,null,null,3,6]
+Output: false
+Explanation: The root node's value is 5 but its right child's value is 4.
+```
+
+:::
+
+#### Solution 1
+
+[solution](<https://leetcode.com/problems/validate-binary-search-tree/discuss/783930/Easy-to-understand-2-lines-solution!-O(n)-with-Examples-and-Explanation-JavaScript>)
+
+Main idea: Check if the current node's value is within the **valid range** (`floor`/`ceiling`).
+
+- Base case: `root=null`, the tree is a valid binary search tree.
+- Recursively check the valid range of each node `floor < root.val < ceiling`:
+  - Initially, the valid range of the `root` node is $[\infty, +\infty]$
+  - After visiting the `root`, we start restricting the **valid range**.
+    - If we move to the left child, the `ceiling` of the left child will be updated to `root.val`.
+    - If we move to the right child, the `floor` of the right child will be updated to `root.val`.
+
+```js
+var isValidBST = function (root, floor = -Infinity, ceiling = Infinity) {
+  if (!root) return true;
+
+  if (!(floor < root.val && root.val < ceiling)) {
+    return false;
+  }
+
+  return (
+    isValidBST(root.left, floor, root.val) &&
+    isValidBST(root.right, root.val, ceiling)
+  );
+};
+```
+
+#### Solution 2
+
+Use **in-order traversal** to collect all the `values` of a binary search tree,
+then check if the `values` are in the correct order (ascending).
+
+<JSEditor run={false}>{solution15}</JSEditor>
+
+### 235. Lowest Common Ancestor of a Binary Search Tree
+
+src: [https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
+
+:::note
+
+Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes in the BST.
+
+“The lowest common ancestor is defined between two nodes `p` and `q` as the lowest node in `Tree`
+that has both `p` and `q` as descendants (where we allow a node to be a descendant of itself).”
+
+**Example 1:**
+
+![eg 1](https://assets.leetcode.com/uploads/2018/12/14/binarysearchtree_improved.png)
+
+```
+Input: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8
+Output: 6
+Explanation: The LCA of nodes 2 and 8 is 6.
+```
+
+**Example 2:**
+
+![eg 2](https://assets.leetcode.com/uploads/2018/12/14/binarysearchtree_improved.png)
+
+```
+Input: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4
+Output: 2
+Explanation: The LCA of nodes 2 and 4 is 2,
+since a node can be a descendant of itself according to the LCA definition.
+```
+
+:::
+
+#### Solution 1
+
+- Level order traversal, `callback(node, levelNum)`
+  - Search for the `target nodes` based on the current node.
+    - Found target nodes - update the lowest common ancestor
+    - Not found - break
+
+#### Solution 2
+
+![solution](https://raw.githubusercontent.com/hot13399/leetcode-graphic-answer/master/235.%20Lowest%20Common%20Ancestor%20of%20a%20Binary%20Search%20Tree.jpg)
+
+- If both `target nodes` are **less** than the `current node`, pick the left child as the potential common ancestor.
+- If both `target nodes` are **greater** than the `current node`, pick the right child as the potential common ancestor.
+- If the `current node` is causing a **diverging**, return the current node.
+  e.g. **0** and **5** go for different subtrees at node **2**. So node **2** is the lowest common ancestor.
+
+:::info
+
+There are some special **constraints**:
+
+- All `Node.val` are unique.
+- `p != q`
+- `p` and `q` will exist in the **BST**.
+
+:::
+
+<JSEditor run={false}>{solution16}</JSEditor>
+
+## Day 9 Graph/BFS/DFS
+
+### 733. Flood Fill
+
+- Array
+- Depth-First Search
+
+src: [https://leetcode.com/problems/flood-fill](https://leetcode.com/problems/flood-fill/)
+
+:::note
+
+You are given three integers `sr`, `sc`, and `color`.
+You should perform a flood fill on the image starting from the pixel `image[sr][sc]`.
+
+- sr: starting row
+- sc: starting col
+
+> To perform a **flood** fill, consider the starting pixel, plus any pixels connected **4-directionally** to the **starting pixel** of the _same color_ as the starting pixel, plus any pixels connected 4-directionally to those pixels (also with the same color), and so on. Replace the color of all of the aforementioned pixels with color.
+
+**Example 1:**
+
+![example 1](https://assets.leetcode.com/uploads/2021/06/01/flood1-grid.jpg)
+
+```
+Input: image = [[1,1,1],[1,1,0],[1,0,1]], sr = 1, sc = 1, color = 2
+Output: [[2,2,2],[2,2,0],[2,0,1]]
+```
+
+**Example 2:**
+
+```
+Input: image = [[0,0,0],[0,0,0]], sr = 0, sc = 0, color = 0
+Output: [[0,0,0],[0,0,0]]
+```
+
+:::
+
+<JSEditor run={false}>{solution17}</JSEditor>
+
+### 200. Number of Islands
+
+- Array
+- Depth-First Search
+
+src: [https://leetcode.com/problems/number-of-islands](https://leetcode.com/problems/number-of-islands/)
+
+:::note
+
+Given an `m x n` 2D binary grid grid which represents a map of `'1'`s (land) and `'0'`s (water), return the number of islands.
+
+An **island** is surrounded by water and is formed by connecting adjacent lands **horizontally** or **vertically**. You may assume **all four edges** of the grid are all surrounded by water.
+
+:::
+
+#### Solution
+
+[https://leetcode.com/problems/number-of-islands/discuss/56340/Python-Simple-DFS-Solution](https://leetcode.com/problems/number-of-islands/discuss/56340/Python-Simple-DFS-Solution)
+
+Iterate through each of the cell and if it is a land, do `DFS` to mark the all adjacent lands, then increment the counter by 1.
+
+```python
+def numIslands(self, grid):
+    if not grid:
+        return 0
+
+    count = 0
+    for i in range(len(grid)):
+        for j in range(len(grid[0])):
+            if grid[i][j] == '1':
+                self.dfs(grid, i, j)
+                count += 1
+    return count
+
+def dfs(self, grid, i, j):
+    if i<0 or j<0 or i>=len(grid) or j>=len(grid[0]) or grid[i][j] != '1':
+        return
+    grid[i][j] = '#' # mark/exclude the entire land, only count it once in the main loop
+    self.dfs(grid, i+1, j)
+    self.dfs(grid, i-1, j)
+    self.dfs(grid, i, j+1)
+    self.dfs(grid, i, j-1)
+```
+
+<JSEditor run={false}>{solution18}</JSEditor>
+
+## Day 10 Dynamic Programming
+
+### 509. Fibonacci Number
+
+src: [https://leetcode.com/problems/fibonacci-number](https://leetcode.com/problems/fibonacci-number/)
+
+<JSEditor run={false}>{solution19}</JSEditor>
+
+### 70. Climbing Stairs
+
+src: [https://leetcode.com/problems/climbing-stairs](https://leetcode.com/problems/climbing-stairs/)
+
+```python
+def climbStairs(n):
+    if n == 1:
+        return 1
+    if n == 2:
+        return 2
+    return climbStairs(n-1) + climbStairs(n-2)
+```
+
+<JSEditor run={false}>{solution20}</JSEditor>
+
+## Day 11 Dynamic Programming
+
+<YouTubeVideo
+  src="https://www.youtube.com/embed/oBt53YbR9Kk"
+  caption="Dynamic Programming - Learn to Solve Algorithmic Problems"
+/>
+
+### 746. Min Cost Climbing Stairs
+
+src: [https://leetcode.com/problems/min-cost-climbing-stairs](https://leetcode.com/problems/min-cost-climbing-stairs/)
+
+<JSEditor run={false}>{solution21}</JSEditor>
+
+### 62. Unique Paths
+
+src: [https://leetcode.com/problems/unique-paths](https://leetcode.com/problems/unique-paths/)
+
+<JSEditor run={false}>{solution22}</JSEditor>
+
+## Day 12 Sliding Window/Two Pointer
+
+### 438. Find All Anagrams in a String
+
+src: [https://leetcode.com/problems/find-all-anagrams-in-a-string](https://leetcode.com/problems/find-all-anagrams-in-a-string/)
+
+Use sliding window technique, which is inspired by this [https://leetcode.com/problems/find-all-anagrams-in-a-string/discuss/2052920/Clean-JavaScript](https://leetcode.com/problems/find-all-anagrams-in-a-string/discuss/2052920/Clean-JavaScript)
+
+<JSEditor run={false}>{solution23}</JSEditor>
+
+### 424. Longest Repeating Character Replacement
+
+src: [https://leetcode.com/problems/longest-repeating-character-replacement](https://leetcode.com/problems/longest-repeating-character-replacement/)
+
+Inspired by this video: [https://www.youtube.com/watch?v=gqXU1UyA8pk](https://www.youtube.com/watch?v=gqXU1UyA8pk)
+
+<JSEditor run={false}>{solution24}</JSEditor>
+
+## Day 13 Hashmap
+
+### 299. Bulls and Cows
+
+src: [https://leetcode.com/problems/bulls-and-cows](https://leetcode.com/problems/bulls-and-cows)
+
+Given the secret number `secret` and your friend's `guess`, return the **hint** for your friend's guess.
+
+- The number of "bulls", which are digits in the guess that are in the correct position.
+- The number of "cows", which are digits in the guess that are in your secret number but are located in the wrong position. Specifically, the non-bull digits in the guess that could be rearranged such that they become bulls.
+
+```
+Input: secret = "1807", guess = "7810"
+Output: "1A3B"
+Explanation: Bulls are connected with a '|' and cows are underlined:
+"1807"
+  |
+"7810"
+```
+
+Find the value of `bulls` and then find the value of `guess`.
+
+<JSEditor run={false}>{solution25}</JSEditor>
+
+## Day 14 Stack
+
+### 394. Decode String
+
+src: [https://leetcode.com/problems/decode-string](https://leetcode.com/problems/decode-string/)
+
+The encoding rule is: `k[encoded_string]`, where the encoded_string inside the square brackets is being repeated exactly `k` times. Note that `k` is guaranteed to be a positive integer.
+
+[check for balanced brackets](https://www.geeksforgeeks.org/check-for-balanced-parentheses-in-an-expression/).
+
+Inspired by NeetCode [https://www.youtube.com/watch?v=qB0zZpBJlh8](https://www.youtube.com/watch?v=qB0zZpBJlh8)
+
+:::note
+
+`"3[a2[c]]"`
+
+Push every `char` into the `stack` unless the `char` is `]`.
+
+- If `]` is found, process the content inside the brackets, and push the processed result to the stack.
+
+:::
+
+<JSEditor run={false}>{solution26}</JSEditor>
+
+## Day 15 Heap
+
+### 1046. Last Stone Weight
+
+You are given an array of integers stones where ` stones[i]` is the weight of the `ith` stone.
+
+Pick the **heaviest** two stones. Suppose the heaviest two stones have weights ` x`` and  `y`` with `x <= y``. The result of this smash is:
+
+- `x=y`, both stones are destroyed.
+- `x<y`, the stone of weight `x` is destroyed, and the stone of weight `y` has a new weight `y-x`.
+
+At the end of the game, there is at most one stone left. (could be zero stone left).
+
+Return the weight of the last stone, if there are no stones left, return 0.
+
+:::note
+
+1. Push all elements into a max heap.
+2. Pop the largest two stones, and do the smash.
+3. Push the remaining stone after smashing into the max heap.
+
+:::
+
+<JSEditor run={false}>{solution28}</JSEditor>
+
+### 692. Top K Frequent Words
+
+Given an array of strings words and an integer `k`, return the `k` most frequent strings.
+
+Return the answer sorted by the frequency from highest to lowest. Sort the words with the same frequency by their lexicographical order.
+
+<JSEditor run={false}>{solution29}</JSEditor>

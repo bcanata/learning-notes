@@ -1,0 +1,123 @@
+---
+sidebar_label: 📟 var - let - const
+title: 📟 Variable Declaration
+---
+
+import JSEditor from "@src/components/js-live-code-editor";
+import firstExample from "!!raw-loader!./_scripts/03-variable-declaration-01.js";
+import secondExample from "!!raw-loader!./_scripts/03-variable-declaration-02.js";
+import thirdExample from "!!raw-loader!./_scripts/03-variable-declaration-03.js";
+import fourthExample from "!!raw-loader!./_scripts/03-variable-declaration-04.js";
+import fifthExample from "!!raw-loader!./_scripts/03-variable-declaration-05.js";
+
+Useful resources:
+
+- [Var, Let, and Const – What's the Difference?](https://www.freecodecamp.org/news/var-let-and-const-whats-the-difference/)
+- [Variables and scoping](https://exploringjs.com/es6/ch_variables.html#sec_overview-variables)
+
+## `var`
+
+### Scope of `var`
+
+`var` declarations are **global** or **function** scope.
+
+#### Global Scope
+
+The scope is global when `var` variable is declared outside of a function.
+
+```js title="Global Scope"
+var myVar = "Global Variable";
+console.log(myVar); // Global Variable
+console.log(window.myVar); // Global Variable
+```
+
+#### Function Scope
+
+The scope is function scope when `var` variable is declared inside a function. This means that it is only available within that function.
+
+<JSEditor title="Function Scope">{firstExample}</JSEditor>
+
+#### Re-declared and Updated
+
+[Re-declaration?](https://github.com/getify/You-Dont-Know-JS/blob/2nd-ed/scope-closures/ch5.md#re-declaration)
+
+`var` variable can be re-declared and updated
+
+<JSEditor>{secondExample}</JSEditor>
+
+:::note
+
+A repeated `var` declaration of the same identifier name in a scope is effectively a do-nothing operation.
+
+:::
+
+<JSEditor title="repeated var">{thirdExample}</JSEditor>
+
+```js title="After 'pre-process' repeated var"
+var studentName;
+var studentName; // pointless, no-op
+
+studentName = "Frank";
+console.log(studentName);
+// Frank
+
+console.log(studentName); // Frank
+```
+
+### Hoisting of `var`
+
+[Hoisting: Yet Another Metaphor](https://github.com/getify/You-Dont-Know-JS/blob/2nd-ed/scope-closures/ch5.md#hoisting-yet-another-metaphor)
+
+It is useful to think of hoisting as a series of actions JS takes in setting up the program **before execution**.
+
+1. The identifier is hoisted to the top of the scope
+2. It's automatically initialized to the value `undefined`. So that the variable can be used throughout the entire scope.
+
+```js title="Before 'pre-process'"
+age = 20;
+console.log(age);
+// 20
+var age = 30;
+```
+
+```js title="After 'pre-process'" {3}
+var age; // hoisted declaration
+
+age = 20;
+console.log(age);
+age = 30;
+```
+
+:::info
+
+However, `function` declarations are entirely hoisted to the top of each scope. And they are hoisted first, then variables are hoisted immediately after all the functions.
+
+```js title="Before 'pre-process'"
+age = 20;
+sayAge(); // age is 20
+
+function sayAge() {
+  console.log(`age is ${age}`);
+}
+var age;
+```
+
+```js title="After 'pre-process'"
+function sayAge() {
+  console.log(`age is ${age}`);
+}
+var age;
+
+age = 20;
+sayAge(); // age is 20
+```
+
+:::
+
+## Questions
+
+<JSEditor title="Functions are hoisted entirely">{fourthExample}</JSEditor>
+
+---
+
+<JSEditor title="hoisting">{fifthExample}</JSEditor>
